@@ -16,26 +16,26 @@ declare namespace MuBot.Comment {
    * @since 1.0.0
    * @interface IssueComment
    * @extends {MuBot.Payload.FullData}
-   * @property {IssueCommentPayload} payload 事件 payload
+   * @property {IssuePayload} payload 事件 payload
    * @return IssueComment
    */
   interface IssueComment extends MuBot.Payload.FullData {
-    payload: IssueCommentPayload;
+    payload: IssuePayload;
   }
 
   /**
    * @description issue comment payload 数据结构
    * @since 1.0.0
-   * @interface IssueCommentPayload
+   * @interface IssuePayload
    * @property {string} action 事件动作
    * @property {MuBot.Common.Issue} issue issue 信息
    * @property {MuBot.Common.Comment} comment comment 信息
    * @property {MuBot.Common.Repository} repository 仓库信息
    * @property {MuBot.Common.User} sender 发送者信息
    * @property {MuBot.Common.Installation} installation 安装信息
-   * @return IssueCommentPayload
+   * @return IssuePayload
    */
-  interface IssueCommentPayload {
+  interface IssuePayload {
     action: string;
     issue: MuBot.Common.Issue;
     comment: MuBot.Common.Comment;
