@@ -1,4 +1,15 @@
-# white-tea
+---
+Author: 目棃
+Description: 说明文档
+Date: 2023-10-12
+Update: 2023-10-12
+---
+
+> 本文档 [`Frontmatter`](https://github.com/BTMuli/MuCli#Frontmatter) 由 [MuCli](https://github.com/BTMuli/Mucli) 自动生成于 `2023-10-12 19:03:28`
+>
+> 更新于 `2023-10-12 19:03:28`
+
+# WhiteTea
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) that A Probot app
 
@@ -6,27 +17,11 @@
 
 ```sh
 # Install dependencies
-npm install
+pnpm install
 
 # Run the bot
-npm start
+pnpm start
 ```
-
-## Docker
-
-```sh
-# 1. Build container
-docker build -t white-tea .
-
-# 2. Start container
-docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> white-tea
-```
-
-## Contributing
-
-If you have suggestions for how white-tea could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
-
-For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
