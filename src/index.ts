@@ -4,13 +4,16 @@
  * @since 1.0.0
  */
 
-import {Probot, run} from "probot";
-import {readConfig} from "./utils/readConfig";
-import {probotSetup} from "./utils/probotSetup";
+import process from "node:process";
 
-Probot.defaults(readConfig())
+import { Probot, run } from "probot";
+
+import { probotSetup } from "./utils/probotSetup.ts";
+import { readConfig } from "./utils/readConfig.ts";
+
+Probot.defaults(readConfig());
 
 run(probotSetup).catch((err) => {
-    console.error(err);
-    process.exit(1);
+  console.error(err);
+  process.exit(1);
 });
