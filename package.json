@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "start": "ts-node src/index.ts",
+    "still": "forever -c \"node --loader ts-node/esm ./src/index.ts\" ./",
     "lint:code": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",
     "prettier": "prettier --write .",
