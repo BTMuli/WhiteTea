@@ -1,15 +1,16 @@
-import { Probot } from "probot";
+/**
+ * @file index.ts
+ * @description 应用入口
+ * @since 1.0.0
+ */
 
-export = (app: Probot) => {
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
-    });
-    await context.octokit.issues.createComment(issueComment);
-  });
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+import {Probot, run} from "probot";
+import {readConfig} from "./utils/readConfig";
+import {probotSetup} from "./utils/probotSetup";
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
-};
+Probot.defaults(readConfig())
+
+run(probotSetup).catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
