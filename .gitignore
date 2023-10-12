@@ -1,0 +1,8 @@
+# JetBrains IDE config
+.idea
+# Node.js
+node_modules
+# Private keys
+*.pem
+.env
+!mock-cert.pem
