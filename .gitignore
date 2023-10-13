@@ -2,3 +2,5 @@
 .idea
 # Node.js
 node_modules
+# Env file
+.env.probot
