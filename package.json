@@ -14,8 +14,9 @@
     "probot-app"
   ],
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "still": "forever -c \"node --loader ts-node/esm ./src/index.ts\" ./",
+    "start": "sh src/scripts/start.sh",
+    "reload": "sh src/scripts/reload.sh",
+    "forever": "forever list",
     "lint:code": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",
     "prettier": "prettier --write .",
