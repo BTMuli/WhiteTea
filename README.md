@@ -2,12 +2,12 @@
 Author: 目棃
 Description: 说明文档
 Date: 2023-10-12
-Update: 2023-10-12
+Update: 2023-10-14
 ---
 
 > 本文档 [`Frontmatter`](https://github.com/BTMuli/MuCli#Frontmatter) 由 [MuCli](https://github.com/BTMuli/Mucli) 自动生成于 `2023-10-12 19:03:28`
 >
-> 更新于 `2023-10-12 21:27:34`
+> 更新于 `2023-10-14 01:26:22`
 
 # WhiteTea
 
@@ -21,10 +21,13 @@ Update: 2023-10-12
 # Install dependencies
 pnpm install
 
-# Run the bot
+# Run the bot with forever
 pnpm start
+
+# Run the bot locally
+node --loader ts-node/esm ./src/index.ts
 ```
 
 ## License
 
-[ISC](LICENSE) © 2023 BTMuli
+[ISC](./LICENSE) © 2023 BTMuli
