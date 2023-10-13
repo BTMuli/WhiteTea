@@ -38,12 +38,17 @@ async function issuesOpened(context: Context): Promise<void> {
     ...issueInfo,
     state: "open",
   });
-  const issueWIP = issues.filter((item) => item.labels.includes("计划中")).length;
+  const issueWIP = issues.filter((item) => {
+    return !!item.labels.some((label) => {
+      if (typeof label === "string") {
+        return label === "计划中";
+      } else if (label.name !== undefined) {
+        return label.name.includes("计划中");
+      }
+      return false;
+    });
+  }).length;
   const issueTotal = issues.length;
-  await context.octokit.issues.addLabels({
-    ...issueInfo,
-    labels: ["待处理"],
-  });
   await context.octokit.issues.createComment({
     ...issueInfo,
     body: `等待处理，当前有 ${issueWIP} 个 issue 正在处理中，共有 ${issueTotal} 个 issue`,
