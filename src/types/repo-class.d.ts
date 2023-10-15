@@ -20,7 +20,6 @@ declare namespace MuBot.RepoClass {
    * @property {number} repoId 仓库 ID
    * @property {string} ownerName 仓库拥有者名称
    * @property {number} ownerId 仓库拥有者 ID
-   * @property {number} botId 机器人 ID
    * @property {Record<string, string>} labels 仓库标签
    * @return Config
    */
@@ -29,7 +28,6 @@ declare namespace MuBot.RepoClass {
     repoId: number;
     ownerName: string;
     ownerId: number;
-    botId: number;
     labels: Record<string, string>;
   }
 

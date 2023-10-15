@@ -16,8 +16,6 @@ default:
   ownerName: BTMuli
   # 所有者 ID https://api.github.com/users/BTMuli
   ownerId: 72692909
-  # Bot GitHub ID
-  botId: 147707522
   # 一些基础 label，描述-实际值
   labels:
     WIP: 计划中
