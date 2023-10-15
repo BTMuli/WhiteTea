@@ -8,12 +8,12 @@ import process from "node:process";
 
 import { Probot, run } from "probot";
 
-import { probotSetup } from "./utils/probotSetup.ts";
-import { readConfig } from "./utils/readConfig.ts";
+import { readBotConfig } from "./core/readBotConfig.ts";
+import { runProbot } from "./core/runProbot.ts";
 
-Probot.defaults(readConfig());
+Probot.defaults(readBotConfig());
 
-run(probotSetup).catch((err) => {
+run(runProbot).catch((err) => {
   console.error(err);
   process.exit(1);
 });

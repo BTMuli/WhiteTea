@@ -14,4 +14,5 @@ declare namespace MuBot {
   namespace Common {}
   namespace Constant {}
   namespace Payload {}
+  namespace RepoClass {}
 }

@@ -1,0 +1,28 @@
+# --------------------------------------------
+# File: config/repo.yml
+# Desc: 仓库配置文件
+# Since: 1.0.0
+# --------------------------------------------
+
+# --------------------------------------------
+# 仓库配置 - 默认
+# --------------------------------------------
+default:
+  # 仓库名称
+  repoName: TeyvatGuide
+  # 仓库 ID https://api.github.com/repos/BTMuli/TeyvatGuide
+  repoId: 610250275
+  # 所有者名称
+  ownerName: BTMuli
+  # 所有者 ID https://api.github.com/users/BTMuli
+  ownerId: 72692909
+  # Bot GitHub ID
+  botId: 147707522
+  # 一些基础 label，描述-实际值
+  labels:
+    WIP: 计划中
+    Done: 待发布
+    Undo: 待处理
+    Feature: 新特性
+    Document: 文档
+    Bug: Bug
