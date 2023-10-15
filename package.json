@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "start": "sh src/scripts/start.sh",
+    "stop": "sh src/scripts/stop.sh",
     "reload": "sh src/scripts/reload.sh",
     "forever": "forever list",
     "lint:code": "eslint --ext .ts .",
