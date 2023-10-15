@@ -4,6 +4,8 @@
  * @since 1.0.0
  */
 
+import * as console from "console";
+
 import type { Context, Probot } from "probot";
 
 import type { BaseRepo } from "../repo/base.ts";
@@ -19,6 +21,7 @@ import { TeyvatGuide } from "../repo/teyvat-guide.ts";
 async function contextHandle(repos: BaseRepo[], context: Context): Promise<void> {
   for (const repo of repos) {
     if (await repo.isHandle(context)) {
+      console.log(repo.getRepoName(), "isHandle");
       await repo.handle(context);
       return;
     }

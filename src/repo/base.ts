@@ -4,6 +4,8 @@
  * @since 1.0.0
  */
 
+import * as console from "console";
+
 import appRootPath from "app-root-path";
 import fs from "fs-extra";
 import type { Context } from "probot";
@@ -58,6 +60,31 @@ export class BaseRepo {
   }
 
   /**
+   * @description Log
+   * @since 1.0.0
+   * @param {string} message Log 信息
+   * @param {string[]} args Log 参数
+   * @return {void}
+   */
+  log(message: string, ...args: string[]): void {
+    const logStr = `[${this.config.repoName}] ${message}`;
+    if (args.length > 0) {
+      console.log(logStr, args);
+      return;
+    }
+    console.log(logStr);
+  }
+
+  /**
+   * @description 获取仓库名称
+   * @since 1.0.0
+   * @return {string} 仓库名称
+   */
+  getRepoName(): string {
+    return this.config.repoName;
+  }
+
+  /**
    * @description 判断是否处理
    * @since 1.0.0
    * @param {Context} context Context 对象
@@ -65,12 +92,18 @@ export class BaseRepo {
    */
   async isHandle(context: Context): Promise<boolean> {
     if (context.isBot) {
+      this.log("isBot");
       return false;
     }
     if (context.repo().owner !== this.config.ownerName) {
+      this.log("ownerNameError", context.repo().owner, this.config.ownerName);
       return false;
     }
-    return context.repo().repo === this.config.repoName;
+    if (context.repo().repo !== this.config.repoName) {
+      this.log("repoNameError", context.repo().repo, this.config.repoName);
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -82,10 +115,12 @@ export class BaseRepo {
   async handle(context: Context): Promise<void> {
     switch (context.name) {
       case "issues":
+        this.log("issuesHandle");
         // @ts-expect-error TS2590: Expression produces a union type that is too complex to represent.
         await this.issues(context);
         break;
       case "issue_comment":
+        this.log("issueCommentHandle");
         await this.issueComment(context);
         break;
       default:
@@ -100,9 +135,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   private async issues(context: Context<"issues">): Promise<void> {
-    if (!(await this.isHandle(context))) {
-      return;
-    }
     if (context.payload.action === "opened") {
       await this.issuesOpened(context);
     }
@@ -144,11 +176,10 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   private async issueComment(context: Context<"issue_comment">): Promise<void> {
-    if (!(await this.isHandle(context))) {
-      return;
-    }
     if (context.payload.action === "created") {
       await this.issueCommentCreated(context);
+    } else {
+      this.log("issueCommentActionError", context.payload.action);
     }
   }
 
@@ -159,7 +190,12 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   private async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-    if (context.payload.sender.name !== this.config.ownerName) {
+    if (context.payload.sender.id !== this.config.ownerId) {
+      this.log(
+        "senderIdError",
+        context.payload.sender.id.toString(),
+        this.config.ownerId.toString(),
+      );
       return;
     }
     const comment = context.payload.comment.body;
