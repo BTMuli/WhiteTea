@@ -15,7 +15,6 @@ import defaultHandle from "../func/defaultHandle.ts";
  * @class TeyvatGuideRepo
  * @extends {BaseRepo}
  */
-// @ts-expect-error S2590: Expression produces a union type that is too complex to represent.
 class TeyvatGuideRepo extends BaseRepo {
   /**
    * @func issuesOpened

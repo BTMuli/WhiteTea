@@ -10,8 +10,5 @@
  * @namespace MuBot
  */
 declare namespace MuBot {
-  namespace Comment {}
-  namespace Common {}
-  namespace Payload {}
   namespace RepoClass {}
 }
