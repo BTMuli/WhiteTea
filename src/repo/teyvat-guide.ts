@@ -28,6 +28,17 @@ class TeyvatGuideRepo extends BaseRepo {
   }
 
   /**
+   * @func issuesClosed
+   * @description issue closed 事件
+   * @since 1.0.0
+   * @param {Context<"issues.closed">} context probot context
+   * @returns {Promise<void>} void
+   */
+  protected async issuesClosed(context: Context<"issues.closed">): Promise<void> {
+    await defaultHandle.issues.closed(context, this);
+  }
+
+  /**
    * @func issueCommentCreated
    * @description issue comment created 事件
    * @since 1.0.0
@@ -36,6 +47,28 @@ class TeyvatGuideRepo extends BaseRepo {
    */
   protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
     await defaultHandle.issueComment.created(context, this);
+  }
+
+  /**
+   * @func pullRequestOpened
+   * @description pull request opened 事件
+   * @since 1.0.0
+   * @param {Context<"pull_request.opened">} context probot context
+   * @returns {Promise<void>} void
+   */
+  protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
+    await defaultHandle.pullRequest.opened(context, this);
+  }
+
+  /**
+   * @func releasePublished
+   * @description release published 事件
+   * @since 1.0.0
+   * @param {Context<"release.published">} context probot context
+   * @returns {Promise<void>} void
+   */
+  protected async releasePublished(context: Context<"release.published">): Promise<void> {
+    await defaultHandle.release.published(context, this);
   }
 }
 

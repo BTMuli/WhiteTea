@@ -6,10 +6,14 @@
 
 import issueComment from "./issueComment.ts";
 import issues from "./issues.ts";
+import pullRequest from "./pullRequest.ts";
+import release from "./release.ts";
 
 const defaultHandle = {
   issues,
   issueComment,
+  pullRequest,
+  release,
 };
 
 export default defaultHandle;

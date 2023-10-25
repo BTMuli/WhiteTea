@@ -107,7 +107,7 @@ export class BaseRepo {
   }
 
   /**
-   * @description 事物处理 - 中转
+   * @description 事务处理 - 中转
    * @since 1.0.0
    * @param {Context} context Context 对象
    * @return {Promise<void>}
@@ -127,6 +127,18 @@ export class BaseRepo {
         await this.issueComment(issueCommentContext);
         break;
       }
+      case "pull_request": {
+        this.log("pullRequestHandle");
+        const pullRequestContext = <Context<"pull_request">>context;
+        await this.pullRequest(pullRequestContext);
+        break;
+      }
+      case "release": {
+        this.log("releaseHandle");
+        const releaseContext = <Context<"release">>context;
+        await this.release(releaseContext);
+        break;
+      }
       default: {
         break;
       }
@@ -134,20 +146,33 @@ export class BaseRepo {
   }
 
   /**
-   * @description 事物处理 - issues
+   * @description 事务处理 - issues
    * @since 1.0.0
    * @param {Context<"issues">} context Context 对象
    * @return {Promise<void>}
    */
   private async issues(context: Context<"issues">): Promise<void> {
-    if (context.payload.action === "opened") {
-      const issuesOpenedContext = <Context<"issues.opened">>context;
-      await this.issuesOpened(issuesOpenedContext);
+    const action = context.payload.action;
+    switch (action) {
+      case "opened": {
+        const issuesOpenedContext = <Context<"issues.opened">>context;
+        await this.issuesOpened(issuesOpenedContext);
+        break;
+      }
+      case "closed": {
+        const issuesClosedContext = <Context<"issues.closed">>context;
+        await this.issuesClosed(issuesClosedContext);
+        break;
+      }
+      default: {
+        this.log("issuesActionError", action);
+        break;
+      }
     }
   }
 
   /**
-   * @description 事物处理 - issues.opened
+   * @description 事务处理 - issues.opened
    * @since 1.0.0
    * @param {Context<"issues.opened">} context Context 对象
    * @return {Promise<void>}
@@ -157,27 +182,105 @@ export class BaseRepo {
   }
 
   /**
-   * @description 事物处理 - issue_comment
+   * @description 事务处理 - issues.closed
+   * @since 1.0.0
+   * @param {Context<"issues.closed">} context Context 对象
+   * @return {Promise<void>}
+   */
+  protected async issuesClosed(context: Context<"issues.closed">): Promise<void> {
+    this.log(String(context.payload.issue.id));
+  }
+
+  /**
+   * @description 事务处理 - issue_comment
    * @since 1.0.0
    * @param {Context<"issue_comment">} context Context 对象
    * @return {Promise<void>}
    */
   private async issueComment(context: Context<"issue_comment">): Promise<void> {
-    if (context.payload.action === "created") {
-      const issueCommentCreatedContext = <Context<"issue_comment.created">>context;
-      await this.issueCommentCreated(issueCommentCreatedContext);
-    } else {
-      this.log("issueCommentActionError", context.payload.action);
+    const action = context.payload.action;
+    switch (action) {
+      case "created": {
+        const issueCommentCreatedContext = <Context<"issue_comment.created">>context;
+        await this.issueCommentCreated(issueCommentCreatedContext);
+        break;
+      }
+      default: {
+        this.log("issueCommentActionError", action);
+        break;
+      }
     }
   }
 
   /**
-   * @description 事物处理 - issue_comment.created
+   * @description 事务处理 - issue_comment.created
    * @since 1.0.0
    * @param {Context<"issue_comment.created">} context Context 对象
    * @return {Promise<void>}
    */
   protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
     this.log(context.payload.comment.body);
+  }
+
+  /**
+   * @description 事务处理 - pull_request
+   * @since 1.0.0
+   * @param {Context<"pull_request">} context Context 对象
+   * @return {Promise<void>}
+   */
+  private async pullRequest(context: Context<"pull_request">): Promise<void> {
+    const action = context.payload.action;
+    switch (action) {
+      case "opened": {
+        const pullRequestOpenedContext = <Context<"pull_request.opened">>context;
+        await this.pullRequestOpened(pullRequestOpenedContext);
+        break;
+      }
+      default: {
+        this.log("pullRequestActionError", action);
+        break;
+      }
+    }
+  }
+
+  /**
+   * @description 事务处理 - pull_request.opened
+   * @since 1.0.0
+   * @param {Context<"pull_request.opened">} context Context 对象
+   * @return {Promise<void>}
+   */
+  protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
+    this.log(String(context.payload.pull_request.id));
+  }
+
+  /**
+   * @description 事务处理 - release
+   * @since 1.0.0
+   * @param {Context<"release">} context Context 对象
+   * @return {Promise<void>}
+   */
+  private async release(context: Context<"release">): Promise<void> {
+    const action = context.payload.action;
+    switch (action) {
+      case "published": {
+        const releasePublishedContext = <Context<"release.published">>context;
+        await this.releasePublished(releasePublishedContext);
+        break;
+      }
+      default: {
+        this.log("releaseActionError", action);
+        break;
+      }
+    }
+  }
+
+  /**
+   * @description 事务处理 - release.published
+   * @since 1.0.0
+   * @param {Context<"release.published">} context Context 对象
+   * @return {Promise<void>}
+   */
+  protected async releasePublished(context: Context<"release.published">): Promise<void> {
+    this.log(String(context.payload.release.id));
   }
 }

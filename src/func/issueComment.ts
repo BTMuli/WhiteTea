@@ -30,11 +30,18 @@ async function issueCommentCreated(
   const comment = context.payload.comment.body;
   const issueInfo = context.issue();
   const labels = repo.getConfig().labels;
+  const issueLabels = context.payload.issue.labels;
   if (comment.startsWith("/WIP")) {
-    await context.octokit.issues.removeLabel({
-      ...issueInfo,
-      name: labels.Done ?? "待发布",
-    });
+    if (
+      issueLabels.some((item) => {
+        return item.name === labels.Undo ?? "待处理";
+      })
+    ) {
+      await context.octokit.issues.removeLabel({
+        ...issueInfo,
+        name: labels.Undo ?? "待处理",
+      });
+    }
     await context.octokit.issues.addLabels({
       ...issueInfo,
       labels: [labels.WIP ?? "计划中"],

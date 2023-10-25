@@ -38,8 +38,37 @@ async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): 
   });
 }
 
+/**
+ * @description 默认 issue 处理函数 - issue closed 事件
+ * @since 1.0.0
+ * @param {Context<"issues.closed">} context probot context
+ * @param {BaseRepo} repo 仓库类
+ * @returns {Promise<void>} void
+ */
+async function issuesClosed(context: Context<"issues.closed">, repo: BaseRepo): Promise<void> {
+  const issueInfo = context.issue();
+  const repoLabels = context.payload.issue.labels;
+  const labels = repo.getConfig().labels;
+  if (repoLabels === undefined) return;
+  if (
+    repoLabels.some((item) => {
+      return item.name === labels.WIP ?? "计划中";
+    })
+  ) {
+    await context.octokit.issues.removeLabel({
+      ...issueInfo,
+      name: labels.WIP ?? "计划中",
+    });
+    await context.octokit.issues.addLabels({
+      ...issueInfo,
+      labels: [labels.Done ?? "待发布"],
+    });
+  }
+}
+
 const issues = {
   opened: issuesOpened,
+  closed: issuesClosed,
 };
 
 export default issues;
