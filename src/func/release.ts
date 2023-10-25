@@ -49,6 +49,35 @@ async function releasePublished(
       body: issueComment,
     });
   }
+  // 获取所有 close 的 pr
+  const { data: prAll } = await context.octokit.pulls.list({
+    ...context.repo(),
+    state: "closed",
+  });
+  const prDone = prAll.filter((pr) => {
+    return !!pr.labels.some((item) => {
+      if (typeof item === "string") {
+        return item === labelDone;
+      } else if (item.name !== undefined && item.name !== null) {
+        return item.name.includes(labelDone);
+      }
+      return false;
+    });
+  });
+  const prComment = `该 pr 已在 [${context.payload.release.name}](${context.payload.release.html_url}) 中发布。`;
+  // 遍历 pr，删除待发布标签
+  for (const pr of prDone) {
+    await context.octokit.issues.removeLabel({
+      ...context.repo(),
+      issue_number: pr.number,
+      name: labelDone,
+    });
+    await context.octokit.issues.createComment({
+      ...context.repo(),
+      issue_number: pr.number,
+      body: prComment,
+    });
+  }
 }
 
 const release = {

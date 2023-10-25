@@ -61,6 +61,17 @@ class TeyvatGuideRepo extends BaseRepo {
   }
 
   /**
+   * @func pullRequestClosed
+   * @description pull request closed 事件
+   * @since 1.0.0
+   * @param {Context<"pull_request.closed">} context probot context
+   * @returns {Promise<void>} void
+   */
+  protected async pullRequestClosed(context: Context<"pull_request.closed">): Promise<void> {
+    await defaultHandle.pullRequest.closed(context, this);
+  }
+
+  /**
    * @func releasePublished
    * @description release published 事件
    * @since 1.0.0

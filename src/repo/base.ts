@@ -236,6 +236,11 @@ export class BaseRepo {
         await this.pullRequestOpened(pullRequestOpenedContext);
         break;
       }
+      case "closed": {
+        const pullRequestClosedContext = <Context<"pull_request.closed">>context;
+        await this.pullRequestClosed(pullRequestClosedContext);
+        break;
+      }
       default: {
         this.log("pullRequestActionError", action);
         break;
@@ -250,6 +255,16 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
+    this.log(String(context.payload.pull_request.id));
+  }
+
+  /**
+   * @description 事务处理 - pull_request.closed
+   * @since 1.0.0
+   * @param {Context<"pull_request.closed">} context Context 对象
+   * @return {Promise<void>}
+   */
+  protected async pullRequestClosed(context: Context<"pull_request.closed">): Promise<void> {
     this.log(String(context.payload.pull_request.id));
   }
 
