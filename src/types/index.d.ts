@@ -12,7 +12,6 @@
 declare namespace MuBot {
   namespace Comment {}
   namespace Common {}
-  namespace Constant {}
   namespace Payload {}
   namespace RepoClass {}
 }

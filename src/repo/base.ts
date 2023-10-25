@@ -52,7 +52,7 @@ export class BaseRepo {
    * @since 1.0.0
    * @return MuBot.RepoClass.Config 仓库配置
    */
-  protected getConfig(): MuBot.RepoClass.Config {
+  public getConfig(): MuBot.RepoClass.Config {
     const configPath = appRootPath.resolve("config/repo.yml");
     const configFile = fs.readFileSync(configPath, "utf8");
     const configAll: MuBot.RepoClass.ConfigAll = parse(configFile);
@@ -114,17 +114,22 @@ export class BaseRepo {
    */
   async handle(context: Context): Promise<void> {
     switch (context.name) {
-      case "issues":
+      case "issues": {
         this.log("issuesHandle");
         // @ts-expect-error TS2590: Expression produces a union type that is too complex to represent.
-        await this.issues(context);
+        const issueContext = <Context<"issues">>context;
+        await this.issues(issueContext);
         break;
-      case "issue_comment":
+      }
+      case "issue_comment": {
         this.log("issueCommentHandle");
-        await this.issueComment(context);
+        const issueCommentContext = <Context<"issue_comment">>context;
+        await this.issueComment(issueCommentContext);
         break;
-      default:
+      }
+      default: {
         break;
+      }
     }
   }
 
@@ -136,7 +141,8 @@ export class BaseRepo {
    */
   private async issues(context: Context<"issues">): Promise<void> {
     if (context.payload.action === "opened") {
-      await this.issuesOpened(context);
+      const issuesOpenedContext = <Context<"issues.opened">>context;
+      await this.issuesOpened(issuesOpenedContext);
     }
   }
 
@@ -146,27 +152,8 @@ export class BaseRepo {
    * @param {Context<"issues.opened">} context Context 对象
    * @return {Promise<void>}
    */
-  private async issuesOpened(context: Context<"issues.opened">): Promise<void> {
-    const issueInfo = context.issue();
-    const { data: issueAll } = await context.octokit.issues.listForRepo({
-      ...issueInfo,
-      state: "open",
-    });
-    const labelWIP = this.config.labels.WIP ?? "计划中";
-    const issueWIP = issueAll.filter((issue) => {
-      return !!issue.labels.some((item) => {
-        if (typeof item === "string") {
-          return item === labelWIP;
-        } else if (item.name !== undefined && item.name !== null) {
-          return item.name.includes(labelWIP);
-        }
-        return false;
-      });
-    });
-    await context.octokit.issues.createComment({
-      ...issueInfo,
-      body: `等待处理，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
-    });
+  protected async issuesOpened(context: Context<"issues.opened">): Promise<void> {
+    this.log(String(context.payload.issue.id));
   }
 
   /**
@@ -177,7 +164,8 @@ export class BaseRepo {
    */
   private async issueComment(context: Context<"issue_comment">): Promise<void> {
     if (context.payload.action === "created") {
-      await this.issueCommentCreated(context);
+      const issueCommentCreatedContext = <Context<"issue_comment.created">>context;
+      await this.issueCommentCreated(issueCommentCreatedContext);
     } else {
       this.log("issueCommentActionError", context.payload.action);
     }
@@ -189,47 +177,7 @@ export class BaseRepo {
    * @param {Context<"issue_comment.created">} context Context 对象
    * @return {Promise<void>}
    */
-  private async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-    if (context.payload.sender.id !== this.config.ownerId) {
-      this.log(
-        "senderIdError",
-        context.payload.sender.id.toString(),
-        this.config.ownerId.toString(),
-      );
-      return;
-    }
-    const comment = context.payload.comment.body;
-    const issueInfo = context.issue();
-    const labelWIP = this.config.labels.WIP ?? "计划中";
-    const labelDone = this.config.labels.Done ?? "待发布";
-    const labelUndo = this.config.labels.Undo ?? "待处理";
-    if (comment.startsWith("/WIP")) {
-      await context.octokit.issues.removeLabel({
-        ...issueInfo,
-        name: labelUndo,
-      });
-      await context.octokit.issues.addLabels({
-        ...issueInfo,
-        labels: [labelWIP],
-      });
-    } else if (comment.startsWith("/done")) {
-      await context.octokit.issues.removeLabel({
-        ...issueInfo,
-        name: labelWIP,
-      });
-      await context.octokit.issues.addLabels({
-        ...issueInfo,
-        labels: [labelDone],
-      });
-    } else if (comment.startsWith("/delay")) {
-      await context.octokit.issues.removeLabel({
-        ...issueInfo,
-        name: labelWIP,
-      });
-      await context.octokit.issues.addLabels({
-        ...issueInfo,
-        labels: [labelUndo],
-      });
-    }
+  protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
+    this.log(context.payload.comment.body);
   }
 }
