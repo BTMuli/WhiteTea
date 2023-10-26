@@ -22,6 +22,7 @@ async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): 
     state: "open",
   });
   const labelWIP = repo.getConfig().labels.WIP ?? "计划中";
+  const labelUndo = repo.getConfig().labels.Undo ?? "待处理";
   const issueWIP = issueAll.filter((issue) => {
     return !!issue.labels.some((item) => {
       if (typeof item === "string") {
@@ -35,6 +36,10 @@ async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): 
   await context.octokit.issues.createComment({
     ...issueInfo,
     body: `等待处理，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
+  });
+  await context.octokit.issues.addLabels({
+    ...issueInfo,
+    labels: [labelUndo],
   });
 }
 
