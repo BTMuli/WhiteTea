@@ -1,12 +1,14 @@
 /**
- * @file src/func/issueComment.ts
- * @description 默认 issueComment 处理函数
+ * @file handler/teyvat-guide/issueComment.ts
+ * @description 原神指南仓库 issueComment 事件处理函数
  * @since 1.0.0
  */
 
 import type { Context } from "probot";
 
-import type { BaseRepo } from "../repo/base.ts";
+import { IssueState } from "./constant.ts";
+import { replaceLabel } from "./utils.ts";
+import type { BaseRepo } from "../../repo/base.ts";
 
 /**
  * @description 默认 issueComment 处理函数 - issue_comment created 事件
@@ -29,44 +31,27 @@ async function issueCommentCreated(
   }
   const comment = context.payload.comment.body;
   const issueInfo = context.issue();
-  const labels = repo.getConfig().labels;
-  const issueLabels = context.payload.issue.labels;
+  const issueLabels = context.payload.issue.labels.map((item) => item.name);
+  let labelsReplace: [string[], string[]] = [[], []];
   if (comment.startsWith("/WIP")) {
-    if (
-      issueLabels.some((item) => {
-        return item.name === labels.Undo ?? "待处理";
-      })
-    ) {
+    labelsReplace = replaceLabel(issueLabels, IssueState.TODO);
+  } else if (comment.startsWith("/done")) {
+    labelsReplace = replaceLabel(issueLabels, IssueState.DONE);
+  } else if (comment.startsWith("/delay")) {
+    labelsReplace = replaceLabel(issueLabels, IssueState.WIP);
+  }
+  if (labelsReplace[0].length !== 0) {
+    for (const label of labelsReplace[0]) {
       await context.octokit.issues.removeLabel({
         ...issueInfo,
-        name: labels.Undo ?? "待处理",
+        name: label,
       });
     }
-    await context.octokit.issues.addLabels({
-      ...issueInfo,
-      labels: [labels.WIP ?? "计划中"],
-    });
-    return;
   }
-  if (comment.startsWith("/done")) {
-    await context.octokit.issues.removeLabel({
-      ...issueInfo,
-      name: labels.WIP ?? "计划中",
-    });
+  if (labelsReplace[1].length !== 0) {
     await context.octokit.issues.addLabels({
       ...issueInfo,
-      labels: [labels.Done ?? "待发布"],
-    });
-    return;
-  }
-  if (comment.startsWith("/delay")) {
-    await context.octokit.issues.removeLabel({
-      ...issueInfo,
-      name: labels.WIP ?? "计划中",
-    });
-    await context.octokit.issues.addLabels({
-      ...issueInfo,
-      labels: [labels.Undo ?? "待处理"],
+      labels: labelsReplace[1],
     });
   }
 }

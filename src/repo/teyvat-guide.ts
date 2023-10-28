@@ -7,7 +7,7 @@
 import type { Context } from "probot";
 
 import { BaseRepo } from "./base.ts";
-import defaultHandle from "../func/defaultHandle.ts";
+import handler from "../handler/teyvat-guide/handler.ts";
 
 /**
  * @description 原神指南仓库类
@@ -17,6 +17,17 @@ import defaultHandle from "../func/defaultHandle.ts";
  */
 class TeyvatGuideRepo extends BaseRepo {
   /**
+   * @description 构造函数
+   * @since 1.0.0
+   * @memberof TeyvatGuideRepo
+   * @constructor
+   * @param {string} [key="TeyvatGuide"] 仓库配置对应的 key 名称
+   */
+  constructor(key: string = "TeyvatGuide") {
+    super(key);
+  }
+
+  /**
    * @func issuesOpened
    * @description issue opened 事件
    * @since 1.0.0
@@ -24,7 +35,7 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async issuesOpened(context: Context<"issues.opened">): Promise<void> {
-    await defaultHandle.issues.opened(context, this);
+    await handler.issues.opened(context);
   }
 
   /**
@@ -35,7 +46,7 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async issuesClosed(context: Context<"issues.closed">): Promise<void> {
-    await defaultHandle.issues.closed(context, this);
+    await handler.issues.closed(context);
   }
 
   /**
@@ -46,7 +57,7 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-    await defaultHandle.issueComment.created(context, this);
+    await handler.issueComment.created(context, this);
   }
 
   /**
@@ -57,7 +68,7 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
-    await defaultHandle.pullRequest.opened(context, this);
+    await handler.pullRequest.opened(context, this);
   }
 
   /**
@@ -68,7 +79,7 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async pullRequestClosed(context: Context<"pull_request.closed">): Promise<void> {
-    await defaultHandle.pullRequest.closed(context, this);
+    await handler.pullRequest.closed(context);
   }
 
   /**
@@ -79,10 +90,8 @@ class TeyvatGuideRepo extends BaseRepo {
    * @returns {Promise<void>} void
    */
   protected async releasePublished(context: Context<"release.published">): Promise<void> {
-    await defaultHandle.release.published(context, this);
+    await handler.release.published(context);
   }
 }
 
-const TeyvatGuide = new TeyvatGuideRepo();
-
-export { TeyvatGuide };
+export const teyvatGuide = new TeyvatGuideRepo();

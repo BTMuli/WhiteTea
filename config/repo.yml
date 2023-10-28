@@ -16,11 +16,12 @@ default:
   ownerName: BTMuli
   # 所有者 ID https://api.github.com/users/BTMuli
   ownerId: 72692909
-  # 一些基础 label，描述-实际值
-  labels:
-    WIP: 计划中
-    Done: 待发布
-    Undo: 待处理
-    Feature: 新特性
-    Document: 文档
-    Bug: Bug
+
+# --------------------------------------------
+# 仓库配置 - TeyvatGuide
+# --------------------------------------------
+TeyvatGuide:
+  repoName: TeyvatGuide
+  repoId: 610250275
+  ownerName: BTMuli
+  ownerId: 72692909

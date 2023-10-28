@@ -1,6 +1,6 @@
 /**
- * @file src/func/index.ts
- * @description 默认事件处理函数
+ * @file src/handler/teyvat-guide/index.ts
+ * @description 原神指南仓库事件处理函数
  * @since 1.0.0
  */
 
@@ -9,11 +9,11 @@ import issues from "./issues.ts";
 import pullRequest from "./pullRequest.ts";
 import release from "./release.ts";
 
-const defaultHandle = {
-  issues,
+const teyvatGuideHandler = {
   issueComment,
+  issues,
   pullRequest,
   release,
 };
 
-export default defaultHandle;
+export default teyvatGuideHandler;

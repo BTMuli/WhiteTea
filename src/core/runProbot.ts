@@ -9,7 +9,7 @@ import * as console from "console";
 import type { Context, Probot } from "probot";
 
 import type { BaseRepo } from "../repo/base.ts";
-import { TeyvatGuide } from "../repo/teyvat-guide.ts";
+import { teyvatGuide } from "../repo/teyvat-guide.ts";
 
 /**
  * @description 事物处理
@@ -35,7 +35,7 @@ async function contextHandle(repos: BaseRepo[], context: Context): Promise<void>
  * @return {void}
  */
 export function runProbot(app: Probot): void {
-  const repos: BaseRepo[] = [TeyvatGuide];
+  const repos: BaseRepo[] = [teyvatGuide];
   app.on("issues", async (context) => {
     await contextHandle(repos, context);
   });

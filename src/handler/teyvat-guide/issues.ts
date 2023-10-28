@@ -1,34 +1,32 @@
 /**
- * @file src/func/issuesHandle.ts
- * @description 默认 issue 处理函数
+ * @file handler/teyvat-guide/issues.ts
+ * @description 原神指南仓库 issues 事件处理函数
  * @since 1.0.0
  */
 
 import type { Context } from "probot";
 
-import type { BaseRepo } from "../repo/base.ts";
+import { IssueLabel, IssueState } from "./constant.ts";
+import { replaceLabel } from "./utils.ts";
 
 /**
  * @description 默认 issue 处理函数 - issue opened 事件
  * @since 1.0.0
  * @param {Context<"issues.opened">} context probot context
- * @param {BaseRepo} repo 仓库类
  * @returns {Promise<void>} void
  */
-async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): Promise<void> {
+async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
   const issueInfo = context.issue();
   const { data: issueAll } = await context.octokit.issues.listForRepo({
     ...issueInfo,
     state: "open",
   });
-  const labelWIP = repo.getConfig().labels.WIP ?? "计划中";
-  const labelUndo = repo.getConfig().labels.Undo ?? "待处理";
   const issueWIP = issueAll.filter((issue) => {
     return !!issue.labels.some((item) => {
       if (typeof item === "string") {
-        return item === labelWIP;
+        return item === IssueLabel.WIP;
       } else if (item.name !== undefined && item.name !== null) {
-        return item.name.includes(labelWIP);
+        return item.name === IssueLabel.WIP;
       }
       return false;
     });
@@ -39,7 +37,7 @@ async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): 
   });
   await context.octokit.issues.addLabels({
     ...issueInfo,
-    labels: [labelUndo],
+    labels: [IssueLabel.TODO],
   });
 }
 
@@ -47,26 +45,24 @@ async function issuesOpened(context: Context<"issues.opened">, repo: BaseRepo): 
  * @description 默认 issue 处理函数 - issue closed 事件
  * @since 1.0.0
  * @param {Context<"issues.closed">} context probot context
- * @param {BaseRepo} repo 仓库类
  * @returns {Promise<void>} void
  */
-async function issuesClosed(context: Context<"issues.closed">, repo: BaseRepo): Promise<void> {
+async function issuesClosed(context: Context<"issues.closed">): Promise<void> {
   const issueInfo = context.issue();
-  const repoLabels = context.payload.issue.labels;
-  const labels = repo.getConfig().labels;
-  if (repoLabels === undefined) return;
-  if (
-    repoLabels.some((item) => {
-      return item.name === labels.WIP ?? "计划中";
-    })
-  ) {
-    await context.octokit.issues.removeLabel({
-      ...issueInfo,
-      name: labels.WIP ?? "计划中",
-    });
+  const repoLabels = context.payload.issue.labels?.map((item) => item.name) ?? [];
+  const replaceLabels = replaceLabel(repoLabels, IssueState.DONE);
+  if (replaceLabels[0].length > 0) {
+    for (const label of replaceLabels[0]) {
+      await context.octokit.issues.removeLabel({
+        ...issueInfo,
+        name: label,
+      });
+    }
+  }
+  if (replaceLabels[1].length > 0) {
     await context.octokit.issues.addLabels({
       ...issueInfo,
-      labels: [labels.Done ?? "待发布"],
+      labels: [...replaceLabels[1]],
     });
   }
 }
