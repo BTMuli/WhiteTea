@@ -32,6 +32,13 @@ async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
       });
     }
   }
+  // 如果没有 assignee，自动 assign 给 owner
+  if (context.payload.issue.assignee === undefined || context.payload.issue.assignee === null) {
+    await context.octokit.issues.addAssignees({
+      ...context.issue(),
+      assignees: [context.payload.issue.user.login],
+    });
+  }
   const issueInfo = context.issue();
   const issueAll = await context.octokit.issues
     .listForRepo({
