@@ -1,5 +1,5 @@
 /**
- * @file src/repo/teyvat-guide.ts
+ * @file repo/teyvat-guide.ts
  * @description 原神指南仓库类
  * @since 1.0.0
  */

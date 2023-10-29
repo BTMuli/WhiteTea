@@ -1,5 +1,5 @@
 /**
- * @file src/repo/base/index.ts
+ * @file repo/base/index.ts
  * @description 仓库类 - 基类
  * @since 1.0.0
  */
@@ -10,6 +10,8 @@ import appRootPath from "app-root-path";
 import fs from "fs-extra";
 import type { Context } from "probot";
 import { parse } from "yaml";
+
+import defaultHandler from "../handler/default/handler.ts";
 
 /**
  * @description 仓库类 - 基类
@@ -73,15 +75,6 @@ export class BaseRepo {
       return;
     }
     console.log(logStr);
-  }
-
-  /**
-   * @description 获取仓库名称
-   * @since 1.0.0
-   * @return {string} 仓库名称
-   */
-  getRepoName(): string {
-    return this.config.repoName;
   }
 
   /**
@@ -178,7 +171,8 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issuesOpened(context: Context<"issues.opened">): Promise<void> {
-    this.log(String(context.payload.issue.id));
+    this.log("issuesOpened");
+    await defaultHandler.issues.opened(context);
   }
 
   /**
@@ -188,7 +182,8 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issuesClosed(context: Context<"issues.closed">): Promise<void> {
-    this.log(String(context.payload.issue.id));
+    this.log("issuesClosed");
+    await defaultHandler.issues.closed(context);
   }
 
   /**

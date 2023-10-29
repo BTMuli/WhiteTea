@@ -4,28 +4,31 @@
  * @since 1.0.0
  */
 
-import * as console from "console";
-
 import type { Context, Probot } from "probot";
 
-import type { BaseRepo } from "../repo/base.ts";
+import { BaseRepo } from "../repo/base.ts";
+import { genshinCard } from "../repo/genshin-card.ts";
 import { teyvatGuide } from "../repo/teyvat-guide.ts";
+
+const defaultRepo = new BaseRepo();
+const repoList: BaseRepo[] = [teyvatGuide, genshinCard];
 
 /**
  * @description 事物处理
  * @since 1.0.0
- * @param {BaseRepo[]} repos 仓库类列表
  * @param {Context} context Probot 上下文
  * @return {Promise<void>} 无返回值
  */
-async function contextHandle(repos: BaseRepo[], context: Context): Promise<void> {
-  for (const repo of repos) {
+async function contextHandle(context: Context): Promise<void> {
+  for (const repo of repoList) {
     if (await repo.isHandle(context)) {
-      console.log(repo.getRepoName(), "isHandle");
+      repo.log("isHandle", context.name);
       await repo.handle(context);
       return;
     }
   }
+  defaultRepo.log("isHandle", context.name);
+  await defaultRepo.handle(context);
 }
 
 /**
@@ -35,11 +38,16 @@ async function contextHandle(repos: BaseRepo[], context: Context): Promise<void>
  * @return {void}
  */
 export function runProbot(app: Probot): void {
-  const repos: BaseRepo[] = [teyvatGuide];
   app.on("issues", async (context) => {
-    await contextHandle(repos, context);
+    await contextHandle(context);
   });
   app.on("issue_comment", async (context) => {
-    await contextHandle(repos, context);
+    await contextHandle(context);
+  });
+  app.on("pull_request", async (context) => {
+    await contextHandle(context);
+  });
+  app.on("release", async (context) => {
+    await contextHandle(context);
   });
 }

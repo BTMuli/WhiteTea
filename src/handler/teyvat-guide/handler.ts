@@ -1,5 +1,5 @@
 /**
- * @file src/handler/teyvat-guide/index.ts
+ * @file handler/teyvat-guide/index.ts
  * @description 原神指南仓库事件处理函数
  * @since 1.0.0
  */

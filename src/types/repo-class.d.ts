@@ -38,4 +38,20 @@ declare namespace MuBot.RepoClass {
    * @return ConfigAll
    */
   type ConfigAll = Record<string, MuBot.RepoClass.Config>;
+
+  /**
+   * @description 仓库类 - label
+   * @since 1.0.0
+   * @interface Label
+   * @memberof MuBot.RepoClass
+   * @property {string} name label 名称
+   * @property {string} color label 颜色
+   * @property {string} description label 描述
+   * @return Label
+   */
+  interface Label {
+    name: string;
+    color: string;
+    description: string;
+  }
 }
