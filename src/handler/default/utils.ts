@@ -15,7 +15,7 @@ import { type ISKType, islDetail, ISLKey, IssueStateLabel } from "./constant.ts"
  * @param {ISKType} state 目标状态
  * @returns {[string[],string[]]} [需要删除的 label, 需要添加的 label]
  */
-function replaceLabelByState(labels: string[], state: ISKType): [string[], string[]] {
+function getReplaceLabelByState(labels: string[], state: ISKType): [string[], string[]] {
   const changeList: string[] = Object.values(IssueStateLabel);
   const stillList: string[] = [];
   labels.forEach((label) => {
@@ -108,8 +108,37 @@ async function getWIPIssues(context: Context): Promise<void> {
   });
 }
 
+/**
+ * @description 处理 label
+ * @since 1.0.0
+ * @param {Context} context probot context
+ * @param labelsReplace
+ * @return {Promise<void>} void
+ */
+async function replaceLabelByLabels(
+  context: Context,
+  labelsReplace: [string[], string[]],
+): Promise<void> {
+  const issueInfo = context.issue();
+  if (labelsReplace[0].length !== 0) {
+    for (const label of labelsReplace[0]) {
+      await context.octokit.issues.removeLabel({
+        ...issueInfo,
+        name: label,
+      });
+    }
+  }
+  if (labelsReplace[1].length !== 0) {
+    await context.octokit.issues.addLabels({
+      ...issueInfo,
+      labels: labelsReplace[1],
+    });
+  }
+}
+
 const defaultUtils = {
-  replaceLabel: replaceLabelByState,
+  getReplaceLabel: getReplaceLabelByState,
+  replaceLabel: replaceLabelByLabels,
   getLabelKey: getLabelKeyByName,
   labelCheck: labelCheckDefault,
   getStatus: getWIPIssues,

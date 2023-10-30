@@ -33,32 +33,18 @@ async function issueCommentCreated(context: Context<"issue_comment.created">): P
   }
   // 根据 comment 内容修改 issue label
   const comment = context.payload.comment.body;
-  const issueInfo = context.issue();
   const issueLabels = context.payload.issue.labels.map((item) => item.name);
   let labelsReplace: [string[], string[]] = [[], []];
   if (comment.startsWith("/WIP")) {
-    labelsReplace = defaultUtils.replaceLabel(issueLabels, ISLKey.TODO);
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.TODO);
   } else if (comment.startsWith("/done")) {
-    labelsReplace = defaultUtils.replaceLabel(issueLabels, ISLKey.DONE);
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.DONE);
   } else if (comment.startsWith("/delay")) {
-    labelsReplace = defaultUtils.replaceLabel(issueLabels, ISLKey.WIP);
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.WIP);
   } else if (comment.startsWith("/status")) {
     await defaultUtils.getStatus(context);
   }
-  if (labelsReplace[0].length !== 0) {
-    for (const label of labelsReplace[0]) {
-      await context.octokit.issues.removeLabel({
-        ...issueInfo,
-        name: label,
-      });
-    }
-  }
-  if (labelsReplace[1].length !== 0) {
-    await context.octokit.issues.addLabels({
-      ...issueInfo,
-      labels: labelsReplace[1],
-    });
-  }
+  await defaultUtils.replaceLabel(context, labelsReplace);
 }
 
 const defaultIssueComment = {

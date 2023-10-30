@@ -40,25 +40,9 @@ async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
  * @returns {Promise<void>} void
  */
 async function issuesClosed(context: Context<"issues.closed">): Promise<void> {
-  const issueInfo = context.issue();
   const repoLabels = context.payload.issue.labels?.map((item) => item.name) ?? [];
-  const replaceLabels = defaultUtils.replaceLabel(repoLabels, ISLKey.DONE);
-  if (replaceLabels[0].length > 0) {
-    for (const label of replaceLabels[0]) {
-      await context.octokit.issues.removeLabel({
-        ...issueInfo,
-        name: label,
-      });
-    }
-  }
-  if (replaceLabels[1].length > 0) {
-    for (const label of replaceLabels[1]) {
-      await context.octokit.issues.addLabels({
-        ...issueInfo,
-        labels: [label],
-      });
-    }
-  }
+  const replaceLabels = defaultUtils.getReplaceLabel(repoLabels, ISLKey.DONE);
+  await defaultUtils.replaceLabel(context, replaceLabels);
 }
 
 const defaultIssue = {
