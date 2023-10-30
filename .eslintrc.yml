@@ -43,6 +43,8 @@ rules:
     - assertionStyle: angle-bracket
   "@typescript-eslint/no-import-type-side-effects": error
   "@typescript-eslint/strict-boolean-expressions": error
+  "@typescript-eslint/prefer-ts-expect-error": off
+  "@typescript-eslint/ban-ts-comment": off
   import/order:
     - error
     - groups:

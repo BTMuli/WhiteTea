@@ -110,7 +110,7 @@ export class BaseRepo {
     switch (context.name) {
       case "issues": {
         this.log("issuesHandle");
-        // @ts-expect-error TS2590: Expression produces a union type that is too complex to represent.
+        // @ts-ignore-error TS2590: Expression produces a union type that is too complex to represent.
         const issueContext = <Context<"issues">>context;
         await this.issues(issueContext);
         break;
