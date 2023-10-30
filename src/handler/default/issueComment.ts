@@ -36,11 +36,11 @@ async function issueCommentCreated(context: Context<"issue_comment.created">): P
   const issueLabels = context.payload.issue.labels.map((item) => item.name);
   let labelsReplace: [string[], string[]] = [[], []];
   if (comment.startsWith("/WIP")) {
-    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.TODO);
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.WIP);
   } else if (comment.startsWith("/done")) {
     labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.DONE);
   } else if (comment.startsWith("/delay")) {
-    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.WIP);
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.TODO);
   } else if (comment.startsWith("/status")) {
     const labelState = issueLabels.filter((label) => {
       return (
