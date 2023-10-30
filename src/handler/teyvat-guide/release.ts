@@ -6,7 +6,7 @@
 
 import type { Context } from "probot";
 
-import { IssueLabel } from "./constant.ts";
+import { IssueStateLabel } from "../default/constant.ts";
 
 /**
  * @description 默认 release 处理函数 - release published 事件
@@ -19,7 +19,6 @@ async function releasePublished(context: Context<"release.published">): Promise<
     ...context.repo(),
     state: "closed",
   });
-  const labelDone = IssueLabel.DONE;
   const issueComment = `该 issue 已在 [${context.payload.release.name}](${context.payload.release.html_url}) 中解决。`;
   for (const issue of issueAllClosed) {
     const issueLabels = issue.labels.map((label) => {
@@ -29,11 +28,11 @@ async function releasePublished(context: Context<"release.published">): Promise<
         return label.name;
       }
     });
-    if (issueLabels.includes(labelDone)) {
+    if (issueLabels.includes(IssueStateLabel.DONE)) {
       await context.octokit.issues.removeLabel({
         ...context.repo(),
         issue_number: issue.number,
-        name: labelDone,
+        name: IssueStateLabel.DONE,
       });
       await context.octokit.issues.createComment({
         ...context.repo(),
@@ -55,11 +54,11 @@ async function releasePublished(context: Context<"release.published">): Promise<
         return label.name;
       }
     });
-    if (prLabels.includes(labelDone)) {
+    if (prLabels.includes(IssueStateLabel.DONE)) {
       await context.octokit.issues.removeLabel({
         ...context.repo(),
         issue_number: pr.number,
-        name: labelDone,
+        name: IssueStateLabel.DONE,
       });
       await context.octokit.issues.createComment({
         ...context.repo(),

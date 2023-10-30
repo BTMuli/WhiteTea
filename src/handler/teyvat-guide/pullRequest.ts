@@ -6,9 +6,9 @@
 
 import type { Context } from "probot";
 
-import { IssueState } from "./constant.ts";
-import { replaceLabel } from "./utils.ts";
 import type { BaseRepo } from "../../repo/base.ts";
+import { ISLKey } from "../default/constant.ts";
+import defaultUtils from "../default/utils.ts";
 
 /**
  * @description 默认 pull request 处理函数 - pull request opened 事件
@@ -52,21 +52,9 @@ async function pullRequestClosed(context: Context<"pull_request.closed">): Promi
     return;
   }
   const prLabels = payload.pull_request.labels.map((item) => item.name);
-  const replaceLabels = replaceLabel(prLabels, IssueState.DONE);
-  if (replaceLabels[0].length > 0) {
-    for (const label of replaceLabels[0]) {
-      await context.octokit.issues.removeLabel({
-        ...context.issue(),
-        name: label,
-      });
-    }
-  }
-  if (replaceLabels[1].length > 0) {
-    await context.octokit.issues.addLabels({
-      ...context.issue(),
-      labels: [...replaceLabels[1]],
-    });
-  }
+  const replaceLabels = defaultUtils.getReplaceLabel(prLabels, ISLKey.DONE);
+  // @ts-ignore TS2590: Expression produces a union type that is too complex to represent.
+  await defaultUtils.replaceLabel(context, replaceLabels);
 }
 
 const pullRequest = {
