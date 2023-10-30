@@ -4,7 +4,9 @@
  * @since 1.0.0
  */
 
-import { type ISKType, ISLKey, IssueStateLabel } from "./constant.ts";
+import type { Context } from "probot";
+
+import { type ISKType, islDetail, ISLKey, IssueStateLabel } from "./constant.ts";
 
 /**
  * @description 替换label
@@ -50,9 +52,35 @@ function getLabelKeyByName(label: IssueStateLabel): ISKType {
   }
 }
 
+/**
+ * @description label 前置检查
+ * @since 1.0.0
+ * @param {Context} context probot context
+ * @return {Promise<void>} void
+ */
+async function labelCheckDefault(context: Context): Promise<void> {
+  const repoLabels = await context.octokit.issues
+    .listLabelsForRepo({
+      ...context.repo(),
+    })
+    .then((res) => {
+      return res.data.map((item) => item.name);
+    });
+  for (const label of Object.values(IssueStateLabel)) {
+    if (!repoLabels.includes(label)) {
+      const labelKey = getLabelKeyByName(label);
+      await context.octokit.issues.createLabel({
+        ...context.issue(),
+        ...islDetail[labelKey],
+      });
+    }
+  }
+}
+
 const defaultUtils = {
   replaceLabel: replaceLabelByState,
   getLabelKey: getLabelKeyByName,
+  labelCheck: labelCheckDefault,
 };
 
 export default defaultUtils;

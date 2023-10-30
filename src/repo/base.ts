@@ -215,7 +215,8 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-    this.log(context.payload.comment.body);
+    this.log("issueCommentCreated", context.payload.comment.body);
+    await defaultHandler.issueComment.created(context);
   }
 
   /**

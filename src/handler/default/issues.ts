@@ -6,7 +6,7 @@
 
 import type { Context } from "probot";
 
-import { islDetail, ISLKey, IssueStateLabel } from "./constant.ts";
+import { ISLKey, IssueStateLabel } from "./constant.ts";
 import defaultUtils from "./utils.ts";
 
 /**
@@ -16,22 +16,8 @@ import defaultUtils from "./utils.ts";
  * @returns {Promise<void>} void
  */
 async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
-  const repoLabels = await context.octokit.issues
-    .listLabelsForRepo({
-      ...context.repo(),
-    })
-    .then((res) => {
-      return res.data.map((item) => item.name);
-    });
-  for (const label of Object.values(IssueStateLabel)) {
-    if (!repoLabels.includes(label)) {
-      const labelKey = defaultUtils.getLabelKey(label);
-      await context.octokit.issues.createLabel({
-        ...context.issue(),
-        ...islDetail[labelKey],
-      });
-    }
-  }
+  // @ts-expect-error-error TS2590: Expression produces a union type that is too complex to represent.
+  await defaultUtils.labelCheck(context);
   // 如果没有 assignee，自动 assign 给 owner
   if (context.payload.issue.assignee === undefined || context.payload.issue.assignee === null) {
     await context.octokit.issues.addAssignees({

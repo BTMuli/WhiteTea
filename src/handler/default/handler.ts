@@ -4,10 +4,12 @@
  * @since 1.0.0
  */
 
+import defaultIssueComment from "./issueComment.ts";
 import defaultIssue from "./issues.ts";
 
 const defaultHandler = {
   issues: defaultIssue,
+  issueComment: defaultIssueComment,
 };
 
 export default defaultHandler;

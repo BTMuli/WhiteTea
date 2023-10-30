@@ -43,17 +43,17 @@ type ISLDetail = {
 export const islDetail: ISLDetail = {
   TODO: {
     name: IssueStateLabel.TODO,
-    color: "#FFCC00",
+    color: "FFCC00",
     description: "Something to do",
   },
   WIP: {
     name: IssueStateLabel.WIP,
-    color: "#8BC34A",
+    color: "8BC34A",
     description: "Something in progress",
   },
   DONE: {
     name: IssueStateLabel.DONE,
-    color: "#1E9CEF",
+    color: "1E9CEF",
     description: "Something done",
   },
 };
