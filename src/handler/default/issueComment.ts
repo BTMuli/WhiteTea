@@ -42,6 +42,8 @@ async function issueCommentCreated(context: Context<"issue_comment.created">): P
     labelsReplace = defaultUtils.replaceLabel(issueLabels, ISLKey.DONE);
   } else if (comment.startsWith("/delay")) {
     labelsReplace = defaultUtils.replaceLabel(issueLabels, ISLKey.WIP);
+  } else if (comment.startsWith("/status")) {
+    await defaultUtils.getStatus(context);
   }
   if (labelsReplace[0].length !== 0) {
     for (const label of labelsReplace[0]) {

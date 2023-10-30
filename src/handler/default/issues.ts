@@ -26,28 +26,7 @@ async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
     });
   }
   const issueInfo = context.issue();
-  const issueAll = await context.octokit.issues
-    .listForRepo({
-      ...issueInfo,
-      state: "open",
-    })
-    .then((res) => {
-      return res.data;
-    });
-  const issueWIP = issueAll.filter((issue) => {
-    return !!issue.labels.some((item) => {
-      if (typeof item === "string") {
-        return item === IssueStateLabel.WIP;
-      } else if (item.name !== undefined && item.name !== null) {
-        return item.name === IssueStateLabel.WIP;
-      }
-      return false;
-    });
-  });
-  await context.octokit.issues.createComment({
-    ...issueInfo,
-    body: `等待处理，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
-  });
+  await defaultUtils.getStatus(context);
   await context.octokit.issues.addLabels({
     ...issueInfo,
     labels: [IssueStateLabel.TODO],

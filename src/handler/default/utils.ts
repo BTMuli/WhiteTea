@@ -77,10 +77,42 @@ async function labelCheckDefault(context: Context): Promise<void> {
   }
 }
 
+/**
+ * @description 获取当前 WIP issue 并评论
+ * @since 1.0.0
+ * @param {Context} context probot context
+ * @return {Promise<void>} void
+ */
+async function getWIPIssues(context: Context): Promise<void> {
+  const issueAll = await context.octokit.issues
+    .listForRepo({
+      ...context.repo(),
+      state: "open",
+    })
+    .then((res) => {
+      return res.data;
+    });
+  const issueWIP = issueAll.filter((issue) => {
+    return !!issue.labels.some((item) => {
+      if (typeof item === "string") {
+        return item === IssueStateLabel.WIP;
+      } else if (item.name !== undefined && item.name !== null) {
+        return item.name === IssueStateLabel.WIP;
+      }
+      return false;
+    });
+  });
+  await context.octokit.issues.createComment({
+    ...context.issue(),
+    body: `等待处理，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
+  });
+}
+
 const defaultUtils = {
   replaceLabel: replaceLabelByState,
   getLabelKey: getLabelKeyByName,
   labelCheck: labelCheckDefault,
+  getStatus: getWIPIssues,
 };
 
 export default defaultUtils;
