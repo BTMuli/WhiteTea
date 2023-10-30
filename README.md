@@ -25,7 +25,7 @@ pnpm install
 pnpm start
 
 # Run the bot locally
-node --loader ts-node/esm ./src/index.ts
+pnpm dev
 ```
 
 ## License
