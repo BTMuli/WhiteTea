@@ -16,7 +16,7 @@ import defaultUtils from "./utils.ts";
  * @returns {Promise<void>} void
  */
 async function issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-  // @ts-expect-error-error TS2590: Expression produces a union type that is too complex to represent.
+  // @ts-ignore-error TS2590: Expression produces a union type that is too complex to represent.
   await defaultUtils.labelCheck(context);
   // 如果 issue 没有 assignee，自动 assign 给 repo owner
   if (context.payload.issue.assignee === undefined || context.payload.issue.assignee === null) {
