@@ -42,7 +42,24 @@ async function issueCommentCreated(context: Context<"issue_comment.created">): P
   } else if (comment.startsWith("/delay")) {
     labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.WIP);
   } else if (comment.startsWith("/status")) {
-    await defaultUtils.getStatus(context);
+    const labelState = issueLabels.filter((label) => {
+      return (
+        label === IssueStateLabel.TODO ||
+        label === IssueStateLabel.WIP ||
+        label === IssueStateLabel.DONE
+      );
+    });
+    if (
+      labelState.length === 0 ||
+      labelState[0] === IssueStateLabel.TODO ||
+      labelState.length > 1
+    ) {
+      await defaultUtils.getStatus(context);
+    } else if (labelState[0] === IssueStateLabel.WIP) {
+      await defaultUtils.getStatus(context, ISLKey.WIP);
+    } else {
+      await defaultUtils.getStatus(context, ISLKey.DONE);
+    }
   }
   await defaultUtils.replaceLabel(context, labelsReplace);
 }

@@ -81,9 +81,10 @@ async function labelCheckDefault(context: Context): Promise<void> {
  * @description 获取当前 WIP issue 并评论
  * @since 1.0.0
  * @param {Context} context probot context
+ * @param {ISKType} state issue 状态
  * @return {Promise<void>} void
  */
-async function getWIPIssues(context: Context): Promise<void> {
+async function getWIPIssues(context: Context, state: ISKType = ISLKey.TODO): Promise<void> {
   const issueAll = await context.octokit.issues
     .listForRepo({
       ...context.repo(),
@@ -102,9 +103,17 @@ async function getWIPIssues(context: Context): Promise<void> {
       return false;
     });
   });
+  let preComment = "";
+  if (state === ISLKey.TODO) {
+    preComment = "待处理";
+  } else if (state === ISLKey.WIP) {
+    preComment = "处理中";
+  } else {
+    preComment = "已完成";
+  }
   await context.octokit.issues.createComment({
     ...context.issue(),
-    body: `等待处理，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
+    body: `${preComment}，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,
   });
 }
 
