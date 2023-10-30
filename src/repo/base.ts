@@ -84,7 +84,8 @@ export class BaseRepo {
    * @return {Promise<boolean>} 是否处理
    */
   async isHandle(context: Context): Promise<boolean> {
-    if (context.isBot) {
+    // 不包含 release 事件
+    if (context.isBot && context.name !== "release") {
       this.log("isBot");
       return false;
     }
