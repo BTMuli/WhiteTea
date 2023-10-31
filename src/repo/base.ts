@@ -252,7 +252,8 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
-    this.log(String(context.payload.pull_request.id));
+    this.log("pullRequestOpened", context.payload.pull_request.title);
+    await defaultHandler.pullRequest.opened(context);
   }
 
   /**
