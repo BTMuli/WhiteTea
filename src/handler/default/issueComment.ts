@@ -41,6 +41,18 @@ async function issueCommentCreated(context: Context<"issue_comment.created">): P
     labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.DONE);
   } else if (comment.startsWith("/delay")) {
     labelsReplace = defaultUtils.getReplaceLabel(issueLabels, ISLKey.TODO);
+  } else if (comment.startsWith("/pub")) {
+    labelsReplace = defaultUtils.getReplaceLabel(issueLabels);
+    const tag = await context.octokit.repos.getLatestRelease({
+      ...context.repo(),
+    });
+    const commentBody = `此 issue 已在 [${tag.data.name}](${tag.data.html_url}) 版本中发布`;
+    await context.octokit.issues.createComment({
+      ...context.issue(),
+      body: commentBody,
+    });
+    await defaultUtils.replaceLabel(context, labelsReplace);
+    return;
   } else if (comment.startsWith("/status")) {
     const labelState = issueLabels.filter((label) => {
       return (

@@ -59,6 +59,17 @@ class TeyvatGuideRepo extends BaseRepo {
   protected async releasePublished(context: Context<"release.published">): Promise<void> {
     await handler.release.published(context);
   }
+
+  /**
+   * @func releaseReleased
+   * @description release released 事件
+   * @since 1.0.0
+   * @param {Context<"release.released">} context probot context
+   * @returns {Promise<void>} void
+   */
+  protected async releaseReleased(context: Context<"release.released">): Promise<void> {
+    await handler.release.released(context);
+  }
 }
 
 export const teyvatGuide = new TeyvatGuideRepo();

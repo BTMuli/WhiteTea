@@ -280,6 +280,11 @@ export class BaseRepo {
         await this.releasePublished(releasePublishedContext);
         break;
       }
+      case "released": {
+        const releaseReleasedContext = <Context<"release.released">>context;
+        await this.releaseReleased(releaseReleasedContext);
+        break;
+      }
       default: {
         this.log("releaseActionError", action);
         break;
@@ -294,6 +299,16 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async releasePublished(context: Context<"release.published">): Promise<void> {
-    this.log(String(context.payload.release.id));
+    this.log("releasePublished", context.payload.release.name);
+  }
+
+  /**
+   * @description 事务处理 - release.released
+   * @since 1.0.0
+   * @param {Context<"release.released">} context Context 对象
+   * @return {Promise<void>}
+   */
+  protected async releaseReleased(context: Context<"release.released">): Promise<void> {
+    this.log("releaseReleased", context.payload.release.name);
   }
 }

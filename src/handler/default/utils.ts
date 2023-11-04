@@ -15,7 +15,7 @@ import { type ISKType, islDetail, ISLKey, IssueStateLabel } from "./constant.ts"
  * @param {ISKType} state 目标状态
  * @returns {[string[],string[]]} [需要删除的 label, 需要添加的 label]
  */
-function getReplaceLabelByState(labels: string[], state: ISKType): [string[], string[]] {
+function getReplaceLabelByState(labels: string[], state?: ISKType): [string[], string[]] {
   const changeList: string[] = Object.values(IssueStateLabel);
   const stillList: string[] = [];
   labels.forEach((label) => {
@@ -23,7 +23,9 @@ function getReplaceLabelByState(labels: string[], state: ISKType): [string[], st
       stillList.push(label);
     }
   });
-  stillList.push(IssueStateLabel[state]);
+  if (state !== undefined && state !== null) {
+    stillList.push(IssueStateLabel[state]);
+  }
   const deleteList = labels.filter((label) => {
     return !stillList.includes(label);
   });
@@ -37,7 +39,7 @@ function getReplaceLabelByState(labels: string[], state: ISKType): [string[], st
  * @description 根据 label 名称获取 label key
  * @since 1.0.0
  * @param {IssueStateLabel} label label 名称
- * @returns {IssueState} label key
+ * @returns {ISKType} label key
  */
 function getLabelKeyByName(label: IssueStateLabel): ISKType {
   switch (label) {
@@ -103,14 +105,7 @@ async function getWIPIssues(context: Context, state: ISKType = ISLKey.TODO): Pro
       return false;
     });
   });
-  let preComment = "";
-  if (state === ISLKey.TODO) {
-    preComment = "待处理";
-  } else if (state === ISLKey.WIP) {
-    preComment = "处理中";
-  } else {
-    preComment = "已完成";
-  }
+  const preComment = IssueStateLabel[state];
   await context.octokit.issues.createComment({
     ...context.issue(),
     body: `${preComment}，当前有 ${issueWIP.length} 个 issue 正在处理中，共有 ${issueAll.length} 个 issue`,

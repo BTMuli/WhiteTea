@@ -69,8 +69,21 @@ async function releasePublished(context: Context<"release.published">): Promise<
   }
 }
 
+/**
+ * @description 默认 release 处理函数 - release released 事件
+ * @since 1.0.0
+ * @description 处理与 release published 事件相同
+ * @param {Context<"release.released">} context probot context
+ * @returns {Promise<void>} void
+ */
+async function releaseReleased(context: Context<"release.released">): Promise<void> {
+  // @ts-ignore-error TS2590: Expression produces a union type that is too complex to represent.
+  await releasePublished(context);
+}
+
 const release = {
   published: releasePublished,
+  released: releaseReleased,
 };
 
 export default release;
