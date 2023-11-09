@@ -11,7 +11,7 @@ import fs from "fs-extra";
 import type { Context } from "probot";
 import { parse } from "yaml";
 
-import defaultHandler from "../handler/default/handler.ts";
+import defaultHandler from "../handler/handler.ts";
 
 /**
  * @description 仓库类 - 基类
@@ -263,7 +263,8 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async pullRequestClosed(context: Context<"pull_request.closed">): Promise<void> {
-    this.log(String(context.payload.pull_request.id));
+    this.log("pullRequestClosed", context.payload.pull_request.title);
+    await defaultHandler.pullRequest.closed(context);
   }
 
   /**
@@ -278,11 +279,6 @@ export class BaseRepo {
       case "published": {
         const releasePublishedContext = <Context<"release.published">>context;
         await this.releasePublished(releasePublishedContext);
-        break;
-      }
-      case "released": {
-        const releaseReleasedContext = <Context<"release.released">>context;
-        await this.releaseReleased(releaseReleasedContext);
         break;
       }
       default: {
@@ -300,15 +296,6 @@ export class BaseRepo {
    */
   protected async releasePublished(context: Context<"release.published">): Promise<void> {
     this.log("releasePublished", context.payload.release.name);
-  }
-
-  /**
-   * @description 事务处理 - release.released
-   * @since 1.0.0
-   * @param {Context<"release.released">} context Context 对象
-   * @return {Promise<void>}
-   */
-  protected async releaseReleased(context: Context<"release.released">): Promise<void> {
-    this.log("releaseReleased", context.payload.release.name);
+    await defaultHandler.release.published(context);
   }
 }

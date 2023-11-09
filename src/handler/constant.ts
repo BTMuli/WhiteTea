@@ -1,5 +1,5 @@
 /**
- * @file handler/default/constant.ts
+ * @file handler/constant.ts
  * @description 默认仓库事件处理函数常量
  * @since 1.0.0
  */

@@ -21,12 +21,3 @@ TeyvatGuide:
   repoId: 610250275
   ownerName: BTMuli
   ownerId: 72692909
-
-# --------------------------------------------
-# 仓库配置 - GenshinCard
-# --------------------------------------------
-GenshinCard:
-  repoName: GenshinCard
-  repoId: 711248024
-  ownerName: BTMuli
-  ownerId: 72692909

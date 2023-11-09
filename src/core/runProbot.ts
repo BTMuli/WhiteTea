@@ -6,12 +6,10 @@
 
 import type { Context, Probot } from "probot";
 
-import { BaseRepo } from "../repo/base.ts";
-import { genshinCard } from "../repo/genshin-card.ts";
-import { teyvatGuide } from "../repo/teyvat-guide.ts";
+import { BaseRepo } from "./baseRepo.ts";
 
 const defaultRepo = new BaseRepo();
-const repoList: BaseRepo[] = [teyvatGuide, genshinCard];
+const repoList: BaseRepo[] = [];
 
 /**
  * @description 事物处理
@@ -27,7 +25,7 @@ async function contextHandle(context: Context): Promise<void> {
       return;
     }
   }
-  defaultRepo.log("isHandle", context.name);
+  defaultRepo.log("isHandle", context.repo().repo, context.name);
   await defaultRepo.handle(context);
 }
 

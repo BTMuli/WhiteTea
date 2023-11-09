@@ -1,5 +1,5 @@
 /**
- * @file handler/default/issues.ts
+ * @file handler/issues.ts
  * @description 默认仓库事件 issue 处理函数
  * @since 1.0.0
  */

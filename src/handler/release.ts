@@ -1,15 +1,15 @@
 /**
- * @file src/handler/teyvat-guide/release.ts
- * @description 原神指南仓库 release 事件处理函数
+ * @file handler/release.ts
+ * @description 默认仓库 release 事件处理函数
  * @since 1.0.0
  */
 
 import type { Context } from "probot";
 
-import { IssueStateLabel } from "../default/constant.ts";
+import { IssueStateLabel } from "./constant.ts";
 
 /**
- * @description 默认 release 处理函数 - release published 事件
+ * @description 默认仓库 release 事件处理函数 - published
  * @since 1.0.0
  * @param {Context<"release.published">} context probot context
  * @returns {Promise<void>} void
@@ -69,21 +69,8 @@ async function releasePublished(context: Context<"release.published">): Promise<
   }
 }
 
-/**
- * @description 默认 release 处理函数 - release released 事件
- * @since 1.0.0
- * @description 处理与 release published 事件相同
- * @param {Context<"release.released">} context probot context
- * @returns {Promise<void>} void
- */
-async function releaseReleased(context: Context<"release.released">): Promise<void> {
-  // @ts-ignore-error TS2590: Expression produces a union type that is too complex to represent.
-  await releasePublished(context);
-}
-
-const release = {
+const defaultRelease = {
   published: releasePublished,
-  released: releaseReleased,
 };
 
-export default release;
+export default defaultRelease;

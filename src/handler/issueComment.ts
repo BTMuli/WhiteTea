@@ -1,5 +1,5 @@
 /**
- * @file src/handler/default/issue_comment.ts
+ * @file src/handler/issue_comment.ts
  * @description 默认仓库事件 issue_comment 处理函数
  * @since 1.0.0
  */

@@ -1,5 +1,5 @@
 /**
- * @file src/handler/default/utils.ts
+ * @file src/handler/utils.ts
  * @description 默认仓库事件处理函数工具函数
  * @since 1.0.0
  */
