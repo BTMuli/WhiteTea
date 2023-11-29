@@ -4,16 +4,29 @@
  * @since 1.0.0
  */
 
-import process from "node:process";
+import * as process from "process";
 
 import { Probot, run } from "probot";
 
 import { readBotConfig } from "./core/readBotConfig.ts";
 import { runProbot } from "./core/runProbot.ts";
+import { writeErrLog } from "./utils/simpleLog.ts";
 
 Probot.defaults(readBotConfig());
 
-run(runProbot).catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+let tryTime = 0;
+
+function RunApp(): void {
+  run(runProbot).catch((err) => {
+    writeErrLog(err);
+    tryTime++;
+    if (tryTime < 5) {
+      RunApp();
+    } else {
+      // todo 发送邮件给管理员
+      process.exit(1);
+    }
+  });
+}
+
+RunApp();

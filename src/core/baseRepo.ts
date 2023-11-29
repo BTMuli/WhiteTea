@@ -64,6 +64,7 @@ export class BaseRepo {
   /**
    * @description Log
    * @since 1.0.0
+   * @todo 写入文件
    * @param {string} message Log 信息
    * @param {string[]} args Log 参数
    * @return {void}
