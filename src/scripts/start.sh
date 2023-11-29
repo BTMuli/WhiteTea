@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-forever start -c "node --loader ts-node/esm ./src/index.ts" ./
+forever start -c "bun ./src/index.ts" ./

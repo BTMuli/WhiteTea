@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@8.10.0",
+  "packageManager": "bun@1.0.14",
   "description": "A Probot app",
   "author": "BTMuli",
   "license": "ISC",
@@ -18,7 +18,7 @@
     "stop": "sh src/scripts/stop.sh",
     "reload": "sh src/scripts/reload.sh",
     "forever": "forever list",
-    "dev": "nodemon --watch src --exec node --loader ts-node/esm ./src/index.ts",
+    "dev": "nodemon --watch src --exec bun ./src/index.ts",
     "lint:code": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",
     "prettier": "prettier --write .",
@@ -37,7 +37,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
     "probot": "^12.3.1",
-    "ts-node": "^10.9.1",
     "yaml": "^2.3.3"
   },
   "devDependencies": {
