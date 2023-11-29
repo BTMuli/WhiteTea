@@ -4,6 +4,9 @@
  * @since 1.0.0
  */
 
+import path from "node:path";
+
+import appRootPath from "app-root-path";
 import fs from "fs-extra";
 
 /**
@@ -14,7 +17,8 @@ import fs from "fs-extra";
  */
 export function writeErrLog(error: any): void {
   const divider = "===========================\n";
-  const logFilePath = "./logs/err.log";
+  const rootPath = appRootPath.path;
+  const logFilePath = path.resolve(rootPath, "logs", "error.log");
   if (!fs.existsSync(logFilePath)) {
     fs.createFileSync(logFilePath);
   }
