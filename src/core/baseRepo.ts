@@ -4,14 +4,13 @@
  * @since 1.0.0
  */
 
-import * as console from "console";
-
 import appRootPath from "app-root-path";
 import fs from "fs-extra";
 import type { Context } from "probot";
 import { parse } from "yaml";
 
 import defaultHandler from "../handler/handler.ts";
+import { logger } from "../utils/logger.ts";
 
 /**
  * @description 仓库类 - 基类
@@ -64,7 +63,6 @@ export class BaseRepo {
   /**
    * @description Log
    * @since 1.0.0
-   * @todo 写入文件
    * @param {string} message Log 信息
    * @param {string[]} args Log 参数
    * @return {void}
@@ -72,10 +70,10 @@ export class BaseRepo {
   log(message: string, ...args: string[]): void {
     const logStr = `[${this.config.repoName}] ${message}`;
     if (args.length > 0) {
-      console.log(logStr, args);
+      logger.log(logStr, args);
       return;
     }
-    console.log(logStr);
+    logger.log(logStr);
   }
 
   /**
