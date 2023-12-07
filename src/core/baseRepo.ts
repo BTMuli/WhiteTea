@@ -70,7 +70,7 @@ export class BaseRepo {
   log(message: string, ...args: string[]): void {
     const logStr = `[${this.config.repoName}] ${message}`;
     if (args.length > 0) {
-      logger.log(logStr, args);
+      logger.log(logStr, args.join(", "));
       return;
     }
     logger.log(logStr);
@@ -108,26 +108,22 @@ export class BaseRepo {
   async handle(context: Context): Promise<void> {
     switch (context.name) {
       case "issues": {
-        this.log("issuesHandle");
         // @ts-ignore-error TS2590: Expression produces a union type that is too complex to represent.
         const issueContext = <Context<"issues">>context;
         await this.issues(issueContext);
         break;
       }
       case "issue_comment": {
-        this.log("issueCommentHandle");
         const issueCommentContext = <Context<"issue_comment">>context;
         await this.issueComment(issueCommentContext);
         break;
       }
       case "pull_request": {
-        this.log("pullRequestHandle");
         const pullRequestContext = <Context<"pull_request">>context;
         await this.pullRequest(pullRequestContext);
         break;
       }
       case "release": {
-        this.log("releaseHandle");
         const releaseContext = <Context<"release">>context;
         await this.release(releaseContext);
         break;
@@ -146,6 +142,7 @@ export class BaseRepo {
    */
   private async issues(context: Context<"issues">): Promise<void> {
     const action = context.payload.action;
+    this.log(`issues.${action}`, context.repo().repo, context.payload.issue.title);
     switch (action) {
       case "opened": {
         const issuesOpenedContext = <Context<"issues.opened">>context;
@@ -171,7 +168,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issuesOpened(context: Context<"issues.opened">): Promise<void> {
-    this.log("issuesOpened");
     await defaultHandler.issues.opened(context);
   }
 
@@ -182,7 +178,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issuesClosed(context: Context<"issues.closed">): Promise<void> {
-    this.log("issuesClosed");
     await defaultHandler.issues.closed(context);
   }
 
@@ -194,6 +189,12 @@ export class BaseRepo {
    */
   private async issueComment(context: Context<"issue_comment">): Promise<void> {
     const action = context.payload.action;
+    this.log(
+      `issue_comment.${action}`,
+      context.repo().repo,
+      `#${context.payload.issue.id}`,
+      context.payload.comment.body,
+    );
     switch (action) {
       case "created": {
         const issueCommentCreatedContext = <Context<"issue_comment.created">>context;
@@ -214,7 +215,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async issueCommentCreated(context: Context<"issue_comment.created">): Promise<void> {
-    this.log("issueCommentCreated", context.payload.comment.body);
     await defaultHandler.issueComment.created(context);
   }
 
@@ -226,6 +226,7 @@ export class BaseRepo {
    */
   private async pullRequest(context: Context<"pull_request">): Promise<void> {
     const action = context.payload.action;
+    this.log(`pull_request.${action}`, context.repo().repo, context.payload.pull_request.title);
     switch (action) {
       case "opened": {
         const pullRequestOpenedContext = <Context<"pull_request.opened">>context;
@@ -251,7 +252,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async pullRequestOpened(context: Context<"pull_request.opened">): Promise<void> {
-    this.log("pullRequestOpened", context.payload.pull_request.title);
     await defaultHandler.pullRequest.opened(context);
   }
 
@@ -262,7 +262,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async pullRequestClosed(context: Context<"pull_request.closed">): Promise<void> {
-    this.log("pullRequestClosed", context.payload.pull_request.title);
     await defaultHandler.pullRequest.closed(context);
   }
 
@@ -274,6 +273,7 @@ export class BaseRepo {
    */
   private async release(context: Context<"release">): Promise<void> {
     const action = context.payload.action;
+    this.log(`release.${action}`, context.repo().repo, context.payload.release.name);
     switch (action) {
       case "published": {
         const releasePublishedContext = <Context<"release.published">>context;
@@ -294,7 +294,6 @@ export class BaseRepo {
    * @return {Promise<void>}
    */
   protected async releasePublished(context: Context<"release.published">): Promise<void> {
-    this.log("releasePublished", context.payload.release.name);
     await defaultHandler.release.published(context);
   }
 }

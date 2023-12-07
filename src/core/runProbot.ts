@@ -9,7 +9,7 @@ import type { Context, Probot } from "probot";
 import { BaseRepo } from "./baseRepo.ts";
 
 const defaultRepo = new BaseRepo();
-const repoList: BaseRepo[] = [];
+// const repoList: BaseRepo[] = [];
 
 /**
  * @description 事物处理
@@ -18,14 +18,13 @@ const repoList: BaseRepo[] = [];
  * @return {Promise<void>} 无返回值
  */
 async function contextHandle(context: Context): Promise<void> {
-  for (const repo of repoList) {
-    if (await repo.isHandle(context)) {
-      repo.log("isHandle", context.name);
-      await repo.handle(context);
-      return;
-    }
-  }
-  defaultRepo.log("isHandle", context.repo().repo, context.name);
+  // for (const repo of repoList) {
+  //   if (await repo.isHandle(context)) {
+  //     repo.log("isHandle", context.name);
+  //     await repo.handle(context);
+  //     return;
+  //   }
+  // }
   await defaultRepo.handle(context);
 }
 
