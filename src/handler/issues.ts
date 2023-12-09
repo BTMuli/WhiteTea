@@ -22,7 +22,7 @@ async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
   if (context.payload.issue.assignee === undefined || context.payload.issue.assignee === null) {
     await context.octokit.issues.addAssignees({
       ...context.issue(),
-      assignees: [context.payload.issue.user.login],
+      assignees: [context.repo().owner],
     });
   }
   const issueInfo = context.issue();
