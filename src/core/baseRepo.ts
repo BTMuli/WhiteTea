@@ -192,7 +192,7 @@ export class BaseRepo {
     this.log(
       `issue_comment.${action}`,
       context.repo().repo,
-      `#${context.payload.issue.id}`,
+      `#${context.issue().issue_number}`,
       context.payload.comment.body,
     );
     switch (action) {
