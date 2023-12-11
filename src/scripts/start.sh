@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-forever start -c "bun ./src/index.ts" ./
+forever start -v -c "bun ./src/index.ts" ./
