@@ -39,7 +39,7 @@ async function contextHandle(context: Context): Promise<void> {
 export function runProbot(app: Probot): void {
   app.on("push", async (context) => {
     context.log.info("push");
-    logger.log("push", context.repo().repo, context.payload.commits.pop()?.message);
+    logger.log("info", "push", context.repo().repo, context.payload.commits.pop()?.message);
   });
   app.on("issues", async (context) => {
     await contextHandle(context);
