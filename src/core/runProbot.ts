@@ -35,6 +35,9 @@ async function contextHandle(context: Context): Promise<void> {
  * @return {void}
  */
 export function runProbot(app: Probot): void {
+  app.on("push", async (context) => {
+    context.log.info("push");
+  });
   app.on("issues", async (context) => {
     await contextHandle(context);
   });
