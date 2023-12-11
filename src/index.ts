@@ -12,6 +12,13 @@ import { logger } from "./utils/logger.ts";
 Probot.defaults(readBotConfig());
 
 function RunApp(): void {
+  // 定时，每 5min 写一次日志
+  setInterval(
+    () => {
+      logger.log("定时器触发");
+    },
+    1000 * 60 * 5,
+  );
   run(runProbot).catch((err) => {
     logger.log(err);
   });
