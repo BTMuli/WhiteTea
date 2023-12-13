@@ -27,6 +27,10 @@ async function contextHandle(context: Context): Promise<void> {
   //     return;
   //   }
   // }
+  if (context.isBot && context.name !== "release") {
+    defaultRepo.log("isBot", context.name);
+    return;
+  }
   await defaultRepo.handle(context);
 }
 
