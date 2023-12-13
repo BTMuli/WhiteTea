@@ -6,3 +6,6 @@ node_modules
 .env.probot
 # Logs
 logs/
+!logs/forever.log
+!logs/err.log
+!logs/out.log
