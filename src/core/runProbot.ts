@@ -42,8 +42,12 @@ async function contextHandle(context: Context): Promise<void> {
  */
 export function runProbot(app: Probot): void {
   logger.log("Probot is running...");
-  app.onAny(async (context) => {
+  app.onAny((context) => {
     logger.log("[onAny]", context.name);
+  });
+  app.on("push", (context) => {
+    context.log.info("push");
+    logger.log("info", "push", context.repo().repo, context.payload.commits.pop()?.message);
   });
   app.on("issues", async (context) => {
     await contextHandle(context);
@@ -57,7 +61,7 @@ export function runProbot(app: Probot): void {
   app.on("release", async (context) => {
     await contextHandle(context);
   });
-  app.onError(async (context) => {
+  app.onError((context) => {
     logger.error("[onErr]", context.event, context.message);
   });
 }
