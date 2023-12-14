@@ -41,6 +41,7 @@ async function contextHandle(context: Context): Promise<void> {
  * @return {void}
  */
 export function runProbot(app: Probot): void {
+  logger.log("Probot is running...");
   app.onAny(async (context) => {
     logger.log("[onAny]", context.name);
   });
