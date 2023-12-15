@@ -27,7 +27,9 @@ async function contextHandle(context: Context): Promise<void> {
   //     return;
   //   }
   // }
-  if (context.isBot && context.name !== "release") {
+  // 运行的 bot 操作
+  const whiteName = ["pull_request", "release"];
+  if (context.isBot && !whiteName.includes(context.name)) {
     defaultRepo.log("isBot", context.name);
     return;
   }
