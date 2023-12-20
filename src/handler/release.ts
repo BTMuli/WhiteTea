@@ -29,15 +29,15 @@ async function releasePublished(context: Context<"release.published">): Promise<
       }
     });
     if (issueLabels.includes(IssueStateLabel.DONE)) {
-      await context.octokit.issues.removeLabel({
-        ...context.repo(),
-        issue_number: issue.number,
-        name: IssueStateLabel.DONE,
-      });
       await context.octokit.issues.createComment({
         ...context.repo(),
         issue_number: issue.number,
         body: issueComment,
+      });
+      await context.octokit.issues.removeLabel({
+        ...context.repo(),
+        issue_number: issue.number,
+        name: IssueStateLabel.DONE,
       });
     }
   }
@@ -48,11 +48,7 @@ async function releasePublished(context: Context<"release.published">): Promise<
   const prComment = `该 pr 已在 [${context.payload.release.name}](${context.payload.release.html_url}) 中发布。`;
   for (const pr of prAllClosed) {
     const prLabels = pr.labels.map((label) => {
-      if (typeof label === "string") {
-        return label;
-      } else {
-        return label.name;
-      }
+      return label.name;
     });
     if (prLabels.includes(IssueStateLabel.DONE)) {
       await context.octokit.issues.removeLabel({
