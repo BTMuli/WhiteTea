@@ -19,6 +19,7 @@
     "reload": "sh src/scripts/reload.sh",
     "forever": "forever list",
     "dev": "nodemon --watch src --exec bun ./src/index.ts",
+    "clean": "bun ./src/utils/clean.ts",
     "lint:code": "eslint --ext .ts .",
     "lint:fix": "eslint --fix --ext .ts .",
     "prettier": "prettier --write .",
