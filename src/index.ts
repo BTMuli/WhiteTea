@@ -13,7 +13,11 @@ import { logger } from "./utils/logger.ts";
 
 Probot.defaults(readBotConfig());
 
-run(runProbot).catch((err) => {
-  logger.log(err);
-  process.exit(1);
-});
+run(runProbot)
+  .then(() => {
+    logger.log("Probot started");
+  })
+  .catch((err) => {
+    logger.log(<string>err);
+    process.exit(1);
+  });
