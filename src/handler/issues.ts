@@ -41,7 +41,11 @@ async function issuesOpened(context: Context<"issues.opened">): Promise<void> {
  */
 async function issuesClosed(context: Context<"issues.closed">): Promise<void> {
   const repoLabels = context.payload.issue.labels?.map((item) => item.name) ?? [];
-  const replaceLabels = defaultUtils.getReplaceLabel(repoLabels, ISLKey.DONE);
+  let target: ISLKey | undefined = ISLKey.DONE;
+  if (context.payload.issue.state_reason !== "completed") {
+    target = undefined;
+  }
+  const replaceLabels = defaultUtils.getReplaceLabel(repoLabels, target);
   await defaultUtils.replaceLabel(context, replaceLabels);
 }
 
