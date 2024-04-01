@@ -13,17 +13,7 @@ import { logger } from "./utils/logger.ts";
 
 Probot.defaults(readBotConfig());
 
-run(runProbot)
-  .then(() =>
-    // 定时，每 5min 执行一次
-    setInterval(
-      () => {
-        logger.log("定时任务");
-      },
-      5 * 60 * 1000,
-    ),
-  )
-  .catch((err) => {
-    logger.log(<string>err);
-    process.exit(1);
-  });
+run(runProbot).catch((err) => {
+  logger.log(<string>err);
+  process.exit(1);
+});

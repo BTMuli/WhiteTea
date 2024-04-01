@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "bun@1.0.33",
+  "packageManager": "bun@1.0.36",
   "description": "A Probot app",
   "author": "BTMuli",
   "license": "ISC",
@@ -38,14 +38,14 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "log4js": "^6.9.1",
-    "probot": "^13.1.0",
+    "probot": "^13.1.2",
     "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.8",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.11.28",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@types/node": "^20.12.2",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
@@ -57,7 +57,7 @@
     "prettier": "^3.2.5",
     "smee-client": "^2.0.1",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.3"
   },
   "engines": {
     "node": ">= 10.13.0"
